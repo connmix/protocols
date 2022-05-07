@@ -95,7 +95,7 @@ function _M._handshake(buf, conn, uri)
     --print(headers)
 
     --uri验证
-    if req_headers["RequestUri"] ~= uri then
+    if string.find(req_headers["RequestUri"], uri) ~= 1 then
         mix_log(mix_DEBUG, "uri does not allow")
         return -1
     end
