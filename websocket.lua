@@ -170,7 +170,7 @@ function _M._handshake(buf, conn, uri, on_handshake)
     conn:set_context_value("headers", req_headers)
 
     if on_handshake ~= nil then
-        on_handshake(conn, req_headers)
+        on_handshake(req_headers, conn)
     end
 
     return 0
