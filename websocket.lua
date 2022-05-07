@@ -32,10 +32,10 @@ local force_masking = false
 local _M = {}
 local EOL = "\r\n"
 
-function _M.input(buf, conn, uri)
+function _M.input(buf, conn, uri, on_handshake)
     --握手
     if not conn:context_value("__handshake") then
-        return _M._handshake(buf, conn, uri)
+        return _M._handshake(buf, conn, uri, on_handshake)
     end
 
     --读取frame
@@ -66,7 +66,7 @@ function _M.encode(str)
     return frame
 end
 
-function _M._handshake(buf, conn, uri)
+function _M._handshake(buf, conn, uri, on_handshake)
     local pos = string.find(buf:tostring(), EOL .. EOL, 1, true)
     if not pos then
         return 0
@@ -168,6 +168,11 @@ function _M._handshake(buf, conn, uri)
     conn:clear_buffer()
     conn:set_context_value("__handshake", true)
     conn:set_context_value("headers", req_headers)
+
+    if on_handshake ~= nil then
+        on_handshake(conn, req_headers)
+    end
+
     return 0
 end
 
